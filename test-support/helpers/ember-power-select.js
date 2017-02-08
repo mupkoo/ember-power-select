@@ -13,10 +13,10 @@ function typeText(selector, text) {
 }
 
 function fireNativeMouseEvent(eventType, selectorOrDomElement, options = {}) {
-  let event;
+  let event, target;
   try {
     event = new window.Event(eventType, { bubbles: true, cancelable: true, view: window });
-  } catch (e) {
+  } catch(e) {
     // fix IE11: "Object doesn't support this action"
     event = document.createEvent('Event');
     let bubbles = true;
@@ -25,7 +25,6 @@ function fireNativeMouseEvent(eventType, selectorOrDomElement, options = {}) {
   }
 
   Object.keys(options).forEach((key) => event[key] = options[key]);
-  let target;
   if (typeof selectorOrDomElement === 'string') {
     target = $(selectorOrDomElement)[0];
   } else {
@@ -108,7 +107,7 @@ export default function() {
       throw new Error(`You called "selectChoose('${cssPath}', '${valueOrSelector}')" but no select was found using selector "${cssPath}"`);
     }
 
-    let contentId = `${$trigger.attr('aria-controls')}`;
+    let contentId = `${$trigger.attr('aria-owns')}`;
     let $content = find(`#${contentId}`)
     // If the dropdown is closed, open it
     if ($content.length === 0) {
@@ -148,7 +147,7 @@ export default function() {
       throw new Error(`You called "selectSearch('${cssPath}', '${value}')" but no select was found using selector "${cssPath}"`);
     }
 
-    let contentId = `${$trigger.attr('aria-controls')}`;
+    let contentId = `${$trigger.attr('aria-owns')}`;
     let isMultipleSelect = $(`${cssPath} .ember-power-select-trigger-multiple-input`).length > 0;
 
     let dropdownIsClosed = $(`#${contentId}`).length === 0;
